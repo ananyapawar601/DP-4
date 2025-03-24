@@ -1,46 +1,40 @@
-/*
-DP Bottom Up
+class Solution {
 
-Time Complexity: 
-O(N^2 )
-Outer loop runs N times.
-Inner loop runs N times in the worst case.
-Checking substring in HashSet takes O(1).
+    public int maxSumAfterPartitioning(int[] arr, int k) {
 
-Space Complexity: 
-O(N)
-dp array of size N+1.
-HashSet storing wordDict.
+        int n = arr.length;
 
-The code iterates through s, checking if any prefix s[j:i] is in wordDict and if dp[j] is true. 
-If both conditions hold, dp[i] is marked true, meaning s[0:i] is breakable. Finally, dp[s.length()] is returned as the result.
- */
+        int []dp = new int[n];
 
- class Solution {
+        dp[0] = arr[0];
 
-    public boolean wordBreak(String s, List<String> wordDict) {
+        for(int i = 1; i < n; i++){
 
-        boolean [] dp = new boolean [s.length() + 1];
+            int maxInCurrPartition = arr[i];
 
-        HashSet <String> set = new HashSet<>(wordDict);
+            for(int j = 1; j <= k && i - j + 1 >= 0; j++){
 
-        dp[0] = true;
+                maxInCurrPartition = Math.max(maxInCurrPartition, arr[i- j + 1]);
 
-        for(int i = 1; i < dp.length; i++){
+                 int currResult = maxInCurrPartition*j;
 
-            for(int j = 0; j < i; j++){
+                if(i - j >= 0){
 
-                if(dp[j] && set.contains(s.substring(j,i))){
+                    currResult += dp[i - j];
 
-                    dp[i] = true;
+                } else {
+
+                    currResult += 0;
 
                 }
+
+                dp[i] = Math.max(dp[i], currResult);
 
             }
 
         }
 
-        return dp[dp.length - 1];
+        return dp[n-1];
 
     }
 
